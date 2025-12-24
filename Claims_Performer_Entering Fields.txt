@@ -1,0 +1,140 @@
+A) Fields
+V_Dummy = if(Out_Transaction.Elements("Fields").Any(),Out_Transaction.Element("Fields").Elements("field"),XElement.EmptySequence)
+For Each : field in Configuration XML
+-Inserting Data Into Field
+-If:Contains Action/ Error
+
+B) MULTIPLERECEIPT_Multiple transaction
+-IF:Out_Transaction.Elements("Fields").Any()
+--IF:Out_Transaction.Element("Fields").Elements("MULTIPLERECEIPT").Any()
+--number_of_times_to_be_iterrated = 0
+--cordinate_counter = =0
+--WHILE:number_of_times_to_be_iterrated<Convert.ToInt32(ProcessData_XML.Element(ProcessData_XML.Root.Name).Element("MULTIPLERECEIPT").Attribute("count").Value)
+---V_Dummy = Out_Transaction.Element("Fields").Element("MULTIPLERECEIPT").Elements("field")
+---For Each : field in Configuration XML
+----Inserting Data Into Field
+----If:Contains Action/ Error
+---number_of_times_to_be_iterrated = number_of_times_to_be_iterrated+1
+---IF:cordinate_counter+1 =Convert.ToInt32(ProcessData_XML.Element(ProcessData_XML.Root.Name).Element("MULTIPLERECEIPT").Attribute("onepagetransaction").Value)
+----THEN:
+----Switch key:ProcessData_XML.Element(ProcessData_XML.Root.Name).Element("MULTIPLERECEIPT").Attribute("KEYTOPROCESSED").Value.ToString.TrimEnd.TrimStart.ToLower()
+----cordinate_counter = 0
+----ELSE : 
+----cordinate_counter = cordinate_counter+1
+
+C) WHILE_multipleScreenTransaction
+-IF:Out_Transaction.Elements("Fields").Any()
+--IF:Out_Transaction.Element("Fields").Elements("WHILE").Any()
+---whileCounter = 0
+---pageDown = 0
+---For Each : whileTran in ProcessData_XML.Root.Elements("WHILE")
+----IF:whileTran.Attribute("tranno").value = Out_Transaction.Element("Fields").Element("WHILE").Attribute("tranno").Value
+-----co_ordinateMultiplier = 0
+-----For Each : oneTran in whileTran.Elements("MULTIPLERECEIPT")
+------V_Dummy = Out_Transaction.Element("Fields").Element("WHILE").Element("MULTIPLERECEIPT").Elements("field")
+------For Each : field in Configuration XML
+-------Inserting Data Into Field
+-------If_BudgetCode
+-------If_TAX
+-------If:Contains Action / Error
+------IF:co_ordinateMultiplier+1 =Convert.ToInt32(oneTran.Attribute("onepagetransaction").Value)
+-------THEN:
+-------Switch key:oneTran.Attribute("KEYTOPROCESSED").Value.ToString.TrimEnd.TrimStart.ToLower()
+-------co_ordinateMultiplier = 0
+-------ELSE : 
+-------co_ordinateMultiplier = co_ordinateMultiplier+1
+------temp = 0
+------WHILE temp < pageDown
+-------IF:whileIndex = ProcessData_XML.Root.Elements("WHILE").Count -1 and whileTran.Elements("MULTIPLERECEIPT").Count-1 = mulindex and temp+2 = pageDown
+--------THEN : Nothing
+--------ELSE : Send Key = pagedown
+-------temp = temp+1
+----If:whileCounter+1 = Convert.ToInt32(whileTran.Attribute("onepagetransaction").Value)
+-----THEN :
+------IF:whileIndex+1 = ProcessData_XML.Root.Elements("WHILE").Count
+-------THEN : Nothing
+-------ELSE : switch key : whileTran.Attribute("KEYTOPROCESSED").Value.ToString.TrimEnd.TrimStart.ToLower()
+------pageDown = pageDown+1
+------whileCounter = 0
+-----ELSE :
+------whileCounter = whileCounter+1
+
+D) SWITCH
+
+E) Decision
+
+F) validation
+
+G) Validation
+
+H) Decisoin Key
+
+I) Check Key And Enter Value
+
+J) Comp value
+
+K) If:Nav Contain errorx
+
+
+OD
+ZL
+ZP...split payments
+
+OneTRan ...xml
+[<MULTIPLERECEIPT count="5" onepagetransaction="1" KEYTOPROCESSED="Nothing" CORDINATEMULTIPLCATION="0" tranno="2">
+  <AMOUNT>380.1</AMOUNT>
+  <CGST>9</CGST>
+  <SGST>9</SGST>
+  <IGST>0</IGST>
+  <CGSTAMT>34.21</CGSTAMT>
+  <SGSTAMT>34.21</SGSTAMT>
+  <IGSTAMT>0</IGSTAMT>
+  <HSN>35069999</HSN>
+  <INVNUMBER>S5425G202208735</INVNUMBER>
+  <INVDATE>28/06/2022</INVDATE>
+  <TDS>0</TDS>
+  <FLAG>F</FLAG>
+</MULTIPLERECEIPT>]
+
+WhileTran : XML
+[<WHILE count="2" onepagetransaction="3" KEYTOPROCESSED="pagedown" CORDINATEMULTIPLCATION="1" tranno="1">
+  <MULTIPLERECEIPT count="5" onepagetransaction="1" KEYTOPROCESSED="Nothing" CORDINATEMULTIPLCATION="0" tranno="2">
+    <AMOUNT>1918.46</AMOUNT>
+    <CGST>9</CGST>
+    <SGST>9</SGST>
+    <IGST>0</IGST>
+    <CGSTAMT>172.66</CGSTAMT>
+    <SGSTAMT>172.66</SGSTAMT>
+    <IGSTAMT>0</IGSTAMT>
+    <HSN>70072190</HSN>
+    <INVNUMBER>S5425G202208735</INVNUMBER>
+    <INVDATE>28/06/2022</INVDATE>
+    <TDS>0</TDS>
+    <FLAG>P</FLAG>
+  </MULTIPLERECEIPT>
+  <MULTIPLERECEIPT count="5" onepagetransaction="1" KEYTOPROCESSED="Nothing" CORDINATEMULTIPLCATION="0" tranno="2">
+    <AMOUNT>380.1</AMOUNT>
+    <CGST>9</CGST>
+    <SGST>9</SGST>
+    <IGST>0</IGST>
+    <CGSTAMT>34.21</CGSTAMT>
+    <SGSTAMT>34.21</SGSTAMT>
+    <IGSTAMT>0</IGSTAMT>
+    <HSN>35069999</HSN>
+    <INVNUMBER>S5425G202208735</INVNUMBER>
+    <INVDATE>28/06/2022</INVDATE>
+    <TDS>0</TDS>
+    <FLAG>F</FLAG>
+  </MULTIPLERECEIPT>
+</WHILE>]
+
+V_Dummy : Naviagtion
+GetElements { [<field onsamecordinate="FLAG" dx="10" dy="16" />], [<field constanttext="AD" dx="11" dy="16" />], [<field constanttext="" dx="15" dy="58" action="backspace" />], [<field text="AMOUNT" dx="15" dy="58" />], [<field constanttext="" dx="14" dy="60" action="enter" errorx="24" errory="1" />], [<field constanttext="" dx="14" dy="60" action="enter" />], [<field constanttext="" dx="14" dy="60" action="enter" />], [<field constanttext="" dx="14" dy="60" action="enter" />] }
+
+field: Naviagtion
+[<field onsamecordinate="FLAG" dx="10" dy="16" />]
+
+
+CORDINATEMULTIPLICATION : xml for x co-ordinate
+
+

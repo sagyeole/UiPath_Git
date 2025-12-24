@@ -1,0 +1,125 @@
+<Navigation>
+<Nav ScreenNumber='S0017 02' Slenth='9' Scx='01' Scy='072'>
+<Fields>
+	<field text='BRANCH' dx='03' dy='065'/>
+	<field constanttext='' dx='12' dy='43' action='enter'/>
+	<field database='CLIENTID'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S0018 02' Slenth='9' Scx='01' Scy='072' selx='08' sely='015' action='enter'/>
+<Nav ScreenNumber='S4021  02' Slenth='10' Scx='01' Scy='072'>
+<Fields>
+	<field text='CLAIMNO' dx='16' dy='37'/>
+	<field constanttext='F' dx='22' dy='37' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4036  01' Slenth='10' Scx='01' Scy='69'>
+<Fields>
+	<officervalidation text='OFFID' error='Officer ID RBT is not allowed'>
+        	<field dx='21' dy='076' Slenth='3'/>
+    	</officervalidation>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4036  01' Slenth='10' Scx='01' Scy='69'>
+<Fields>
+	<field text='REVIEWDATE' dx='13' dy='69'/>
+	<field text='ASSESSOR' dx='19' dy='15'/>
+	<field text='ASSESSORAPTDT' dx='19' dy='049'/>
+	<field text='ASSESSORRPTDT' dx='19' dy='066'/>
+	<field constanttext='X' dx='22' dy='78' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='SZY30 01' Slenth='8' Scx='01' Scy='72'>
+<Fields>
+	<field text='AcknowledgementDate' dx='06' dy='40'/>
+	<field text='FirstSurveyReportDate' dx='07' dy='40'/>
+	<field text='SurveyDate' dx='08' dy='40'/>
+	<field text='FinalSurveyRequestDate' dx='11' dy='40'/>
+	<field text='FinalSurveySubmitDate' dx='12' dy='40'/>
+	<field text='LastReceiptDocumentDate' dx='14' dy='40'/>
+	<field text='InvestigatorName' dx='16' dy='40'/>
+	<field text='AppointmentInvestigatorDate' dx='17' dy='40'/>
+	<field text='ReportInvestigatorDate' dx='18' dy='40' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4036  01' Slenth='10' Scx='01' Scy='69' action='enter'/>
+<Nav ScreenNumber='S4035  01' Slenth='11' Scx='01' Scy='072'>
+<Fields>
+	<field constanttext='B' dx='21' dy='41' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4037   02' Slenth='11' Scx='01' Scy='070'> 
+<Fields>
+	<field constanttext='' dx='11' dy='27' action='backspace'/>
+	<field text='LABOUROD' dx='11' dy='27'/>
+	<MULTIPLERECEIPT tranno='3'>
+		<field text='CONSTANTCODE' dx='12' dy='07'/>
+		<field text='ADDONCODE' dx='12' dy='18'/>
+		<field text='ADDONNAME' dx='12' dy='27'/>		
+        </MULTIPLERECEIPT>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4037   02' Slenth='11' Scx='01' Scy='070' action='enter'/>
+<Nav ScreenNumber='S4035  01' Slenth='11' Scx='01' Scy='072'>
+<Fields>
+	<field constanttext='F' dx='21' dy='41' action='enter'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='SJ426   01' Slenth='11' Scx='01' Scy='70'>
+<Fields>
+	<validation text='VALIDATION' error='Code Doesnt Match'>
+		<field dx='14' dy='018' Slenth='9'/>
+	</validation>
+</Fields>
+</Nav>
+<Nav ScreenNumber='SJ426   01' Slenth='11' Scx='01' Scy='70' action='enter'/>
+<Nav ScreenNumber='S4035  01' Slenth='10' Scx='01' Scy='072'>
+<Fields>
+	<field constanttext='G' dx='21' dy='41' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+
+<Nav ScreenNumber='S4039  02' Slenth='11' Scx='01' Scy='069'>
+<Fields>
+	<field constanttext='AP' dx='17' dy='027'/>
+        <field constanttext='Claims Details Updated' dx='17' dy='031' action='enter' errorx='24' errory='1'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S4021  02' Slenth='10' Scx='01' Scy='072' errorx='24' errory='01'/>
+</Navigation>
+
+
+USE [claim_database]
+GO
+/****** Object:  StoredProcedure [dbo].[SelectAllPolicy]    Script Date: 07-09-2022 13:04:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+
+ALTER Procedure [dbo].[SelectAllPolicy] @Output2 nvarchar(max), @Input1 nvarchar(max), @SubProcessName nvarchar(max),@ProcessData xml,@Priority nvarchar(100)
+As
+Begin
+Declare @count int
+SET @count = (Select count(RequestId) from TBL_ClaimsProcesses Where Output2 = @Output2 and Input1 = @Input1 and SubProcess_Name like '%'+@SubProcessName+'%' and ErrorMessage not like '%NULL%');
+if (@count > 0)
+BEGIN
+Delete from TBL_ClaimsProcesses Where Output2 = @Output2 and Input1 = @Input1 and SubProcess_Name like '%'+@SubProcessName+'%' and ErrorMessage not like '%NULL%';
+SET @count = (Select count(RequestId) from TBL_ClaimsProcesses Where Output2 = @Output2 and Input1 = @Input1 and SubProcess_Name like '%'+@SubProcessName+'%');
+End
+Else
+BEGIN
+SET @count = (Select count(RequestId) from TBL_ClaimsProcesses Where Output2 = @Output2 and Input1 = @Input1 and SubProcess_Name like '%'+@SubProcessName+'%' and ErrorMessage like '%NULL%')
+End
+if (@count < 1)
+Begin
+Insert into TBL_ClaimsProcesses(ErrorMessage,ProcessData,[Priority],Input1,Output2,SubProcess_Name) values('NULL',@ProcessData,@Priority,@Input1,@Output2,@SubProcessName)
+End
+End
+
+
+
+

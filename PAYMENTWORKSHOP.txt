@@ -1,0 +1,47 @@
+<Navigation>
+<Nav ScreenNumber='S0017 02' Slenth='9' Scx='01' Scy='072'>
+<Fields>
+	<field text='BRANCHCODE' dx='03' dy='065'/>
+	<field constanttext='' dx='10' dy='13' action='enter' errorx='24' errory='01'/>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S0018 02' Slenth='9' Scx='01' Scy='072' selx='09' sely='42' action='enter'></Nav>
+<Nav ScreenNumber='S2201  01' Slenth='10' Scx='01' Scy='072'>
+<Fields>
+	<field constanttext='2' dx='14' dy='41'/>
+	<field text='PAYEE' dx='15' dy='41'/>
+	<field constanttext='20' dx='18' dy='41'/>
+	<field constanttext='GNCLM' dx='20' dy='41'/>
+	<field constanttext='A' dx='21' dy='41' action='enter'/>
+</Fields> 
+</Nav>
+<Nav ScreenNumber='S2200 02' Slenth='9' Scx='01' Scy='72'>
+<Fields>
+	<field text='FINAL' dx='07' dy='24'/>
+	<field text='FINAL' dx='08' dy='62'/>
+	<MULTIPLERECEIPT>
+		<field constanttext='CL' dx='14' dy='4'/>
+		<field constanttext='PY' dx='14' dy='7'/>
+		<field getdatabase='CLAIMNO' Output='Output1' Input='Output2' Where='CLAIMSWORKSHOP' dx='14' dy='10'/>
+		<field text='AMOUNT' dx='14' dy='29'/>
+	</MULTIPLERECEIPT>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S2200 02' Slenth='9' Scx='01' Scy='72' action='enter'/>
+<Nav ScreenNumber='SP039 02' Slenth='9' Scx='01' Scy='71'>
+<Fields>
+	<WHILE tranno='1'>
+		<MULTIPLERECEIPT>
+			<field onsamecordinate='FLAG' dx='10' dy='16'/>
+			<field constanttext='AD' dx='11' dy='16'/>
+			<field text='AMOUNT' dx='15' dy='58'/>
+			<field constanttext='' dx='14' dy='60' action='enter' errorx='24' errory='01'/>
+			<field constanttext='' dx='14' dy='60' action='enter'/>
+			<field constanttext='' dx='14' dy='60' action='enter'/>
+			<field constanttext='' dx='14' dy='60' action='enter'/>
+		</MULTIPLERECEIPT>
+	</WHILE>
+</Fields>
+</Nav>
+<Nav ScreenNumber='S2201  01' Slenth='10' Scx='01' Scy='072' errorx='24' errory='1'/>
+</Navigation>
